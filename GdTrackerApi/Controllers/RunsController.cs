@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Text.Json;
-using GdTrackerApi.Data;
+using GdTracker.Infra.Data;
 using GdTracker.Core.DTOs;
 using GdTracker.Core.Entities;
 using Microsoft.AspNetCore.Mvc;

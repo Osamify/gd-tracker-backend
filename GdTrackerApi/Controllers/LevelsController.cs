@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using GdTrackerApi.Data;
+using GdTracker.Infra.Data;
 using GdTracker.Core.DTOs;
 using GdTracker.Core.Entities;
 namespace GdTrackerApi.Controllers;

@@ -1,4 +1,4 @@
-using GdTrackerApi.Data;
+using GdTracker.Infra.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.HttpLogging;
 
