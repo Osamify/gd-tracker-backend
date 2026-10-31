@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="GdTracker.Core/GdTracker.Core.csproj" Id="88deb0f3-ba0e-427a-8f96-45c155d04342" />
+  <Project Path="GdTracker.Infra/GdTracker.Infra.csproj" Id="8ecb2615-63e4-417d-b91f-026aeee605cd" />
+  <Project Path="GdTrackerApi/GdTrackerApi.csproj" />
+</Solution>
