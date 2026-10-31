@@ -1,5 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
+namespace GdTracker.Core.DTOs;
+
+
 public class GddlApiResponse
 {
     [JsonPropertyName("Rating")]

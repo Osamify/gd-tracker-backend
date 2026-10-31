@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using GdTrackerApi.Models;
+using GdTracker.Core.Entities;
 
 namespace GdTrackerApi.Data
 {

@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GdTracker.Core\GdTracker.Core.csproj" />
+  </ItemGroup>
+
 </Project>

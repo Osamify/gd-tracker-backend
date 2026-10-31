@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace GdTrackerApi.Models
+namespace GdTracker.Core.DTOs
 {
     public class RunPayloadDto
     {
