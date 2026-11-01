@@ -39,7 +39,6 @@ public class RunService : IRunService
 
         if (level == null)
         {
-            _logger.LogInformation("DEBUG: Level {LevelId} not found. Creating new level.", payload.LevelID);
             level = payload.ToLevelEntity(timestamp);
 
             // Adding Gddl Info For New Levels
@@ -95,7 +94,6 @@ public class RunService : IRunService
         }
         else
         {
-            _logger.LogInformation("DEBUG: Level {LevelId} exists. Updating existing level.", payload.LevelID);
             if (level.Progress < 100) level.TotalAttempts = payload.TotalAttempts;
             if (level.Name != payload.LevelName) level.Name = payload.LevelName;
             if (level.Creator != payload.CreatorName) level.Creator = payload.CreatorName;
@@ -123,24 +121,19 @@ public class RunService : IRunService
 
         var newRun = payload.ToRunEntity(timestamp);
         await _repository.AddRunAsync(newRun, ct);
-        _logger.LogInformation("DEBUG: Run staged in memory for Level {LevelId}", payload.LevelID);
 
         // --- DEATH STATS LOGIC ---
-        _logger.LogInformation("DEBUG: Checking Death Stat for Level {LevelId} at {Percentage}%", payload.LevelID, payload.Percentage);
-
         if (payload.Percentage < 100)
         {
             var stat = await _repository.GetLevelProgressStatAsync(payload.LevelID, payload.Percentage, ct);
 
             if (stat != null)
             {
-                _logger.LogInformation("DEBUG: Found existing stat! Incrementing DeathCount to {Count}", stat.DeathCount + 1);
                 stat.DeathCount++;
                 stat.LastDiedAt = timestamp;
             }
             else
             {
-                _logger.LogInformation("DEBUG: Stat not found. Staging new LevelProgressStat.");
                 stat = new LevelProgressStat
                 {
                     LevelId = payload.LevelID,
@@ -151,20 +144,14 @@ public class RunService : IRunService
                 await _repository.AddProgressStatAsync(stat, ct);
             }
         }
-        else
-        {
-            _logger.LogInformation("DEBUG: Skipping Death Stat because Percentage is 100.");
-        }
 
-        _logger.LogInformation("DEBUG: Calling SaveChangesAsync...");
         try
         {
             await _repository.SaveChangesAsync(ct);
-            _logger.LogInformation("DEBUG: SaveChangesAsync SUCCESS!");
         }
         catch (DbUpdateException ex) when (ex.InnerException is PostgresException pgEx && pgEx.SqlState == "23505")
         {
-            _logger.LogInformation("DEBUG: Concurrency error 23505 caught! Retrying as update.");
+            _logger.LogInformation("Concurrent insert handled for level {LevelId}. Retrying as update.", payload.LevelID);
             _repository.ClearChanges();
 
             var existingLevel = await _repository.GetLevelByIdAsync(payload.LevelID, ct);
@@ -201,11 +188,6 @@ public class RunService : IRunService
                     }
                 }
                 await _repository.SaveChangesAsync(ct);
-                _logger.LogInformation("DEBUG: Retry SaveChangesAsync SUCCESS!");
-            }
-            else
-            {
-                _logger.LogWarning("DEBUG: Concurrency error, but could not find existing level to update!");
             }
         }
 
