@@ -1,6 +1,10 @@
+using GdTracker.Core.Repository;
+using GdTracker.Core.Service;
 using GdTracker.Infra.Data;
-using Microsoft.EntityFrameworkCore;
+using GdTracker.Infra.Repository;
+using GdTracker.Infra.Service;
 using Microsoft.AspNetCore.HttpLogging;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +45,9 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<TrackerDbContext>(options =>
     options.UseNpgsql(connectionString));
 
+builder.Services.AddScoped<ILevelRepository, LevelRepository>();
+builder.Services.AddScoped<ILevelService, LevelService>();
+builder.Services.AddHttpClient(); // This is required for the Service to use HttpClient!
 var app = builder.Build();
 
 // 👇 3. ENABLE CORS BEFORE MAPPING CONTROLLERS
