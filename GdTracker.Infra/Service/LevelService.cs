@@ -1,4 +1,5 @@
 ﻿using GdTracker.Core.DTOs;
+using GdTracker.Core.Mappings;
 using GdTracker.Core.Entities;
 using GdTracker.Core.Repository;
 using GdTracker.Core.Service;
@@ -31,35 +32,14 @@ public class LevelService : ILevelService
         return await _repository.GetAllAsync(ct);
     }
 
-    public async Task<object?> GetLevelDetailsAsync(int id, CancellationToken ct)
+    public async Task<LevelDetailsDto?> GetLevelDetailsAsync(int id, CancellationToken ct)
     {
         var level = await _repository.GetByIdAsync(id, ct);
         if (level == null) return null;
 
         var allRuns = await _repository.GetRunsForLevelAndCopiesAsync(id, level.OriginalLevelId, ct);
 
-        return new
-        {
-            level.Id,
-            level.Name,
-            level.Creator,
-            level.DemonDifficulty,
-            level.TotalAttempts,
-            level.Progress,
-            level.Rating,
-            level.TotalSeconds,
-            level.LastPlayedAt,
-            level.DateCompleted,
-            level.GddpTier,
-            level.CurrentAredlRank,
-            level.Enjoyment,
-            level.RatingCount,
-            level.ShowcaseVideoId,
-            level.NlwTier,
-            level.OriginalLevelId,
-            level.IsRated,
-            Runs = allRuns
-        };
+        return level.ToDto(allRuns);
     }
 
     public async Task AddLevelAsync(Level level, CancellationToken ct)
