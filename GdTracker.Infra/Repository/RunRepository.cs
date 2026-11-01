@@ -45,7 +45,13 @@ public class RunRepository(TrackerDbContext context) : IRunRepository
         await context.LevelProgressStats.AddAsync(stat, ct);
     }
 
-
+    public async Task<List<LevelProgressStat>> GetStatsForLevelAsync(int levelId, CancellationToken ct)
+    {
+        return await context.LevelProgressStats
+            .Where(s => s.LevelId == levelId)
+            .OrderBy(s => s.Percentage)
+            .ToListAsync(ct);
+    }
 
 
 }

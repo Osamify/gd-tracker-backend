@@ -39,6 +39,13 @@ public class RunService : IRunService
 
         if (level == null)
         {
+            // If it's a low-effort run (started from 0 and died before 10%), ignore it!
+            if (payload.StartPercentage == 0 && payload.Percentage < 10)
+            {
+                _logger.LogInformation("Skipped new level {LevelId}: Run was less than 10% from 0.", payload.LevelID);
+                return payload.LevelID; // Exit early, don't save the level or the run
+            }
+
             level = payload.ToLevelEntity(timestamp);
 
             // Adding Gddl Info For New Levels
@@ -194,5 +201,10 @@ public class RunService : IRunService
         _logger.LogInformation("Run saved: level {LevelId} {Start}% -> {End}%", payload.LevelID, payload.StartPercentage, payload.Percentage);
 
         return payload.LevelID;
+    }
+
+    public async Task<List<LevelProgressStat>> GetLevelStatsAsync(int levelId, CancellationToken ct)
+    {
+        return await _repository.GetStatsForLevelAsync(levelId, ct);
     }
 }

@@ -13,5 +13,6 @@ public interface IRunRepository
     //LevelProgressStat Table
     Task<LevelProgressStat?> GetLevelProgressStatAsync(int levelId, int percentage, CancellationToken ct);
     Task AddProgressStatAsync(LevelProgressStat stat, CancellationToken ct);
-    //Task GetProgressStatAsync(int levelID, int percentage, CancellationToken ct);
+
+    Task<List<LevelProgressStat>> GetStatsForLevelAsync(int levelId, CancellationToken ct);
 }

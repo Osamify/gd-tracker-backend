@@ -30,4 +30,11 @@ public class RunsController : ControllerBase
 
         return Ok(new { message = "Run logged successfully", levelId = levelId });
     }
+
+    [HttpGet("stats/{levelId}")]
+    public async Task<IActionResult> GetLevelStats(int levelId, CancellationToken ct)
+    {
+        var stats = await _runService.GetLevelStatsAsync(levelId, ct);
+        return Ok(stats);
+    }
 }
