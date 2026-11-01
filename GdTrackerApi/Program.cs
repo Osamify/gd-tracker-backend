@@ -48,6 +48,11 @@ builder.Services.AddDbContext<TrackerDbContext>(options =>
 builder.Services.AddScoped<ILevelRepository, LevelRepository>();
 builder.Services.AddScoped<ILevelService, LevelService>();
 builder.Services.AddHttpClient(); // This is required for the Service to use HttpClient!
+
+builder.Services.AddScoped<IRunRepository, RunRepository>();
+builder.Services.AddScoped<IRunService, RunService>();
+
+
 var app = builder.Build();
 
 // 👇 3. ENABLE CORS BEFORE MAPPING CONTROLLERS
