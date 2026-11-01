@@ -1,6 +1,7 @@
 ﻿using GdTracker.Core.Entities;
 using GdTracker.Core.Repository;
 using GdTracker.Infra.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace GdTracker.Infra.Repository;
 
@@ -9,7 +10,7 @@ public class RunRepository(TrackerDbContext context) : IRunRepository
     public async Task<Level?> GetLevelByIdAsync(int id, CancellationToken ct)
     {
         // Using FindAsync is faster here because it checks memory first before hitting the DB
-        return await context.Levels.FindAsync(id, ct);
+        return await context.Levels.FindAsync(new object[] { id }, ct);
     }
 
     public async Task AddLevelAsync(Level level, CancellationToken ct)
@@ -27,11 +28,24 @@ public class RunRepository(TrackerDbContext context) : IRunRepository
         await context.SaveChangesAsync(ct);
     }
 
-    public async void ClearChanges()
+    public void ClearChanges()
     {
         // This clears Entity Framework's memory so it forgets the failed insert
         context.ChangeTracker.Clear();
     }
+
+    //LevelProgressStat Work
+    public async Task<LevelProgressStat?> GetLevelProgressStatAsync(int levelId, int percentage, CancellationToken ct)
+    {
+        return await context.LevelProgressStats.FirstOrDefaultAsync(s => s.LevelId == levelId && s.Percentage == percentage, ct);
+    }
+
+    public async Task AddProgressStatAsync(LevelProgressStat stat, CancellationToken ct)
+    {
+        await context.LevelProgressStats.AddAsync(stat, ct);
+    }
+
+
 
 
 }

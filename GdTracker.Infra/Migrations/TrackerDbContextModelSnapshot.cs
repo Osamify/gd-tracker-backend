@@ -17,12 +17,12 @@ namespace GdTracker.Infra.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.13")
+                .HasAnnotation("ProductVersion", "10.0.14")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("GdTrackerApi.Models.Level", b =>
+            modelBuilder.Entity("GdTracker.Core.Entities.Level", b =>
                 {
                     b.Property<int>("Id")
                         .HasColumnType("integer");
@@ -93,7 +93,32 @@ namespace GdTracker.Infra.Migrations
                     b.ToTable("Levels");
                 });
 
-            modelBuilder.Entity("GdTrackerApi.Models.Run", b =>
+            modelBuilder.Entity("GdTracker.Core.Entities.LevelProgressStat", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DeathCount")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("LastDiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("LevelId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Percentage")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LevelProgressStats");
+                });
+
+            modelBuilder.Entity("GdTracker.Core.Entities.Run", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -126,9 +151,9 @@ namespace GdTracker.Infra.Migrations
                     b.ToTable("Runs");
                 });
 
-            modelBuilder.Entity("GdTrackerApi.Models.Run", b =>
+            modelBuilder.Entity("GdTracker.Core.Entities.Run", b =>
                 {
-                    b.HasOne("GdTrackerApi.Models.Level", "Level")
+                    b.HasOne("GdTracker.Core.Entities.Level", "Level")
                         .WithMany("Runs")
                         .HasForeignKey("LevelId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -137,7 +162,7 @@ namespace GdTracker.Infra.Migrations
                     b.Navigation("Level");
                 });
 
-            modelBuilder.Entity("GdTrackerApi.Models.Level", b =>
+            modelBuilder.Entity("GdTracker.Core.Entities.Level", b =>
                 {
                     b.Navigation("Runs");
                 });

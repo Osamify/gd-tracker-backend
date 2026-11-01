@@ -11,4 +11,5 @@ public class TrackerDbContext : DbContext
 
     public DbSet<Level> Levels { get; set; }
     public DbSet<Run> Runs { get; set; }
+    public DbSet<LevelProgressStat> LevelProgressStats { get; set; }
 }

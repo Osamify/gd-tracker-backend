@@ -1,12 +1,7 @@
 ﻿using GdTracker.Core.DTOs;
-using GdTracker.Core.Entities;
 using GdTracker.Core.Service;
-using GdTracker.Infra.Data;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Npgsql;
-using System.ComponentModel;
-using System.Text.Json;
+
 namespace GdTrackerApi.Controllers;
 
 [ApiController]
@@ -15,7 +10,6 @@ public class RunsController : ControllerBase
 {
     private readonly IRunService _runService;
     private readonly ILogger<RunsController> _logger;
-    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 
     public RunsController(IRunService runService, ILogger<RunsController> logger)
     {
@@ -24,21 +18,13 @@ public class RunsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddRun(CancellationToken ct)
+    public async Task<IActionResult> AddRun([FromBody] RunPayloadDto payload, CancellationToken ct)
     {
-        RunPayloadDto? payload;
-        try
-        {
-            payload = await JsonSerializer.DeserializeAsync<RunPayloadDto>(Request.Body, JsonOptions, ct);
-        }
-        catch (JsonException ex)
-        {
-            _logger.LogWarning(ex, "Invalid JSON received on /api/runs");
-            return BadRequest($"Invalid JSON: {ex.Message}");
-        }
-
         if (payload == null)
+        {
+            _logger.LogWarning("Invalid payload received on /api/runs");
             return BadRequest("Invalid payload.");
+        }
 
         var levelId = await _runService.AddRunAsync(payload, ct);
 

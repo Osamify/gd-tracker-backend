@@ -10,4 +10,8 @@ public interface IRunRepository
     Task SaveChangesAsync(CancellationToken ct);
     void ClearChanges();
 
+    //LevelProgressStat Table
+    Task<LevelProgressStat?> GetLevelProgressStatAsync(int levelId, int percentage, CancellationToken ct);
+    Task AddProgressStatAsync(LevelProgressStat stat, CancellationToken ct);
+    //Task GetProgressStatAsync(int levelID, int percentage, CancellationToken ct);
 }
