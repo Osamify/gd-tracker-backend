@@ -13,10 +13,7 @@ namespace GdTracker.Core.DTOs
         public string DemonDifficulty { get; set; } = string.Empty;
         public bool IsRated { get; set; }
         public string Rating { get; set; } = string.Empty;
-
-        [JsonPropertyName("activeTime")]
         public float RunTime { get; set; }
-
         public int TotalAttempts { get; set; }
         public string Timestamp { get; set; } = string.Empty;
     }
