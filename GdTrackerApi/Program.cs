@@ -31,10 +31,12 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend", policy =>
     {
         policy.WithOrigins(
-            "http://localhost:3000", // For local testing
-            "https://gd-tracker-frontend-daa5-osamify.vercel.app", // 👈 Your EXACT live Vercel URL
-            "https://gd-tracker.app", // Your custom domain
-            "https://www.gd-tracker.app" // Your custom domain with www
+            "http://localhost:3000",
+            "https://gdtracker-live.vercel.app", // 👈 NO HYPHEN HERE
+            "https://gdtracker-git-main-osamify.vercel.app", // 👈 NO HYPHEN HERE EITHER (for preview branches)
+            "https://gd-tracker-frontend-daa5-osamify.vercel.app",
+            "https://gd-tracker.app",
+            "https://www.gd-tracker.app"
         )
         .AllowAnyHeader()
         .AllowAnyMethod();
