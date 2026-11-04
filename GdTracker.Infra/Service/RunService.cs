@@ -39,13 +39,22 @@ public class RunService : IRunService
 
         if (level == null)
         {
-            // If it's a low-effort run (started from 0 and died before 10%), ignore it!
-            if (payload.StartPercentage == 0 && payload.Percentage < 10)
+            int minPercentageToTrack = 10;
+
+            if (payload.DemonDifficulty == "Extreme" || payload.DemonDifficulty == "Insane")
             {
-                _logger.LogInformation("Skipped new level {LevelId}: Run was less than 10% from 0.", payload.LevelID);
-                return payload.LevelID; // Exit early, don't save the level or the run
+                minPercentageToTrack = 2;
+            }
+            else if (payload.DemonDifficulty == "Hard")
+            {
+                minPercentageToTrack = 5;
             }
 
+            if (payload.StartPercentage == 0 && payload.Percentage < minPercentageToTrack)
+            {
+                _logger.LogInformation("Skipped new level {LevelId}: Run was less than {Threshold}% from 0.", payload.LevelID, minPercentageToTrack);
+                return payload.LevelID;
+            }
             level = payload.ToLevelEntity(timestamp);
 
             // Adding Gddl Info For New Levels
