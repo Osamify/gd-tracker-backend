@@ -31,6 +31,13 @@ public class RunService : IRunService
 
     public async Task<int> AddRunAsync(RunPayloadDto payload, CancellationToken ct)
     {
+        // 🛑 EARLY RETURN: Ignore the "0% to 100%" glitch on unrated levels
+        if (!payload.IsRated && payload.StartPercentage == 0 && payload.Percentage == 100)
+        {
+            _logger.LogInformation("Skipped broken unrated level {LevelId}: Reported a glitched 0% -> 100% run.", payload.LevelID);
+            return payload.LevelID;
+        }
+
         var timestamp = DateTimeOffset.TryParse(payload.Timestamp, out var parsedOffset)
             ? parsedOffset.UtcDateTime
             : DateTime.UtcNow;
