@@ -8,7 +8,9 @@ public class LevelRepository(TrackerDbContext context) : ILevelRepository
 {
     public async Task<List<Level>> GetAllAsync(CancellationToken ct)
     {
-        return await context.Levels.ToListAsync(ct);
+        return await context.Levels
+            .Where(l => l.IsRated == true)
+            .ToListAsync(ct);
     }
 
     public async Task<Level?> GetByIdAsync(int id, CancellationToken ct)
