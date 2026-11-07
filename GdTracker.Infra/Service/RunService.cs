@@ -44,6 +44,13 @@ public class RunService : IRunService
 
         var level = await _repository.GetLevelByIdAsync(payload.LevelID, ct);
 
+        // This prevents replays from ruining your historical completion stats, attempts, or run history.
+        if (level != null && level.Progress == 100)
+        {
+            _logger.LogInformation("Level {LevelId} is already beaten. Ignoring payload to preserve original completion data.", payload.LevelID);
+            return payload.LevelID;
+        }
+
         if (level == null)
         {
             int minPercentageToTrack = 10;
